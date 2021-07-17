@@ -18,6 +18,7 @@
                         <li><a href="{{url('nilai')}}">Data Nilai</a></li>
                         <li><a href="{{url('golongan')}}">Data Golongan</a></li>
                         <li><a href="{{url('detailgolongan')}}">Data Detail Golongan</a></li>
+                        <li><a href="{{url('penggajian')}}">Penggajian</a></li>
                       </ul>
                     </li>
                         <li class="ripple"><a href="{{url('waktupresensi')}}"><span class="fa fa-clock-o"></span> Waktu Presensi</span></a></li>

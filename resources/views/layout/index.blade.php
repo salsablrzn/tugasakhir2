@@ -7,8 +7,10 @@
     <meta name="author" content="Isna Nur Azis">
     <meta name="keyword" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>SDN TAPAAN 1 KOTA PASURUAN</title>
  
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <!-- start: Css -->
     <link rel="stylesheet" type="text/css" href="{{asset('asset/css/bootstrap.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('asset/css/datatable.min.css')}}">
@@ -88,6 +90,7 @@
             $('#datatables-example').DataTable({});
         })
     </script>
+    @yield('script')
   <!-- end: Javascript -->
   </body>
 </html>

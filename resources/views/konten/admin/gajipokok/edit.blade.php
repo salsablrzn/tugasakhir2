@@ -18,7 +18,7 @@
                     <div class="col-md-12">
                       <div class="panel form-element-padding">
                         <div class="panel-heading">
-                         <h4>Data Gaji Pokok/h4>
+                         <h4>Data Gaji Pokok</h4>
                         </div>
                          <div class="panel-body" style="padding-bottom:30px;">
                           <div class="col-md-12">
@@ -33,49 +33,26 @@
                                         <div class="col-md-12">
                                             <input type="id" placeholder="Auto ID"
                                                 class="form-control pl-0 form-control-line" name="ID_GAJI_POKOK"
-                                                id="ID_GAJI_POKOK" required value=" {{ $GAJI_POKOK->ID_GAJI_POKOK}}" readonly>
+                                                id="ID_GAJI_POKOK" value=" {{ $GAJI_POKOK->ID_GAJU_UTAMA}}" readonly>
                                         </div>
                                     </div>                                   
                                      <div class="form-group">
-                                        <label class="col-sm-12 mb-0">Nilai</label>
+                                        <label class="col-sm-12 mb-0">Golongan</label>
                                         <div class="col-sm-12">
-                                        <select class="form-control pl-0 form-control-line" id="ID_NILAI" name="ID_NILAI">
-                                            
-                                          @foreach($NILAI as $N) 
-                                          <option value=" {{ $N->ID_NILAI}}" selected>
-                                            {{ $N->NILAI}}
-                                          </option>
-                                          @endforeach
+                                        <select class="form-control pl-0 form-control-line" name="ID_DETAIL_GOLONGAN">
+                                            <option disabled selected style="padding: 10px">Select Golongan</option>
+                                            @foreach($detail as $d)
+                                            <option value="{{ $d->ID_DETAIL_GOLONGAN }}">{{$d->NAMA_GOLONGAN}} {{$d->NILAI}}</option>
+                                            @endforeach
                                             </select>  
                                         </div>
-                                      </div>   
-                                       <div class="form-group">
-                                        <label class="col-sm-12 mb-0">Nama Golongan</label>
-                                        <div class="col-sm-12">
-                                        <select class="form-control pl-0 form-control-line" id="ID_NILAI" name="ID_NILAI">
-                                            
-                                          @foreach($GOLONGAN as $G) 
-                                          <option value=" {{ $G->ID_GOLONGAN}}" selected>
-                                            {{ $G->NAMA_GOLONGAN}}
-                                          </option>
-                                          @endforeach
-                                            </select>  
-                                        </div>
-                                      </div>    
-                                    <div class="form-group">
-                                        <label for="example-id" class="col-md-12">ID Golongan</label>
-                                        <div class="col-md-12">
-                                            <input type="id" placeholder="Select Golongan"
-                                                class="form-control pl-0 form-control-line" name="ID_GOLONGAN"
-                                                id="ID_GOLONGAN" required value=" {{ $GAJI_POKOK->ID_GOLONGAN}}">
-                                        </div>
-                                    </div>
+                                      </div> 
                                     <div class="form-group">
                                         <label for="example-nama" class="col-md-12">Nama Gaji Pokok</label>
                                         <div class="col-md-12">
                                             <input type="name" placeholder="Please input nama gaji pokok"
                                                 class="form-control pl-0 form-control-line" name="NAMA_GAJI_POKOK"
-                                                id="NAMA_GAJI_POKOK" required value=" {{ $GAJI_POKOK->NAMA_GAJI_POKOK}}">
+                                                id="NAMA_GAJI_POKOK" required value=" {{ $GAJI_POKOK->NAMA_GAJI_UTAMA}}">
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -91,7 +68,7 @@
                                         <div class="col-md-12">
                                             <input type="number" placeholder="Please input nominal gaji pokok"
                                                 class="form-control pl-0 form-control-line" name="NOMINAL_GAJI_POKOK"
-                                                id="NOMINAL_GAJI_POKOK" required value=" {{ $GAJI_POKOK->NOMINAL_GAJI_POKOK}}">
+                                                id="NOMINAL_GAJI_POKOK" required value=" {{ $GAJI_POKOK->NOMINAL_GAJI_UTAMA}}">
                                         </div>
                                     </div>
                                     <div class="form-group">

@@ -40,12 +40,32 @@
                                         <select class="form-control pl-0 form-control-line" name="ID_JABATAN">
                                             <option disabled selected style="padding: 10px">Select ID Jabatan</option>
                                             @foreach($jabatan as $key => $value)
-                                          <option value="{{ $key }}">{{ $value }}
+                                          <option value="{{$key}}">{{ $value }}
                                           </option>
                                           @endforeach
                                             </select>  
                                         </div>
                                       </div>
+                                      <div class="form-group">
+                                        <label class="col-sm-12 mb-0">Golongan</label>
+                                        <div class="col-sm-12">
+                                        <select class="form-control pl-0 form-control-line select-golongan" name="ID_DETAIL_GOLONGAN">
+                                            <option disabled selected style="padding: 10px">Select Golongan</option>
+                                            @foreach($detail as $id =>$nama)
+                                            <option value="{{ $id }}">{{$nama}}</option>
+                                            @endforeach
+                                            </select>  
+                                        </div>
+                                      </div> 
+                                      <div class="form-group">
+                                        <label for="example-nama" class="col-md-12">Gaji Pokok</label>
+                                        <div class="col-md-12">
+                                            <!-- <input type="text"class="form-control pl-0 form-control-line" name="GAJI_POKOK" id="" required> -->
+                                            <select class="form-control pl-0 form-control-line GAJI-POKOK" name="GAJI_POKOK" id="">
+                                                <option disabled selected style="padding: 10px">Select Golongan</option>
+                                            </select> 
+                                        </div>
+                                    </div>
                                     <div class="form-group">
                                         <label for="example-nama" class="col-md-12">NIP</label>
                                         <div class="col-md-12">
@@ -62,14 +82,7 @@
                                                 id="NAMA_PEGAWAI" required>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="example-nama" class="col-md-12">Gaji Pokok</label>
-                                        <div class="col-md-12">
-                                            <input type="number" placeholder="Please input gaji pokok"
-                                                class="form-control pl-0 form-control-line" name="GAJI_POKOK"
-                                                id="GAJI_POKOK" required>
-                                        </div>
-                                    </div>
+                                    
                                     <div class="form-group">
                                         <label for="example-nama" class="col-md-12">Tunjangan</label>
                                         <div class="col-md-12">
@@ -172,4 +185,8 @@
 
 
 
+@endsection
+
+@section('script')
+<script src="{{ asset('/assets/select-gaji-pokok.js') }}"></script>
 @endsection

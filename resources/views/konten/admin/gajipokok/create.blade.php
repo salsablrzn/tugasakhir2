@@ -1,7 +1,6 @@
 @extends('layout/index')
 @section('konten')
 
-
 <div id="content">
                 <div class="panel box-shadow-none content-header">
                   <div class="panel-body">
@@ -27,37 +26,17 @@
                                     <input type = "hidden" name = "_token" value = "<?php echo csrf_token() ?>">
                                     {{ @csrf_field() }}
                                     <div class="form-group">
-                                        <label for="example-id" class="col-md-12">ID Gaji Pokok</label>
-                                        <div class="col-md-12">
-                                            <input type="id" placeholder="Auto ID"
-                                                class="form-control pl-0 form-control-line" name="ID_GAJI_POKOK"
-                                                id="ID_GAJI_POKOK" disabled="" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-12 mb-0">Nilai</label>
+                                        <label class="col-sm-12 mb-0">Golongan</label>
                                         <div class="col-sm-12">
-                                        <select class="form-control pl-0 form-control-line" name="ID_NILAI">
-                                            <option disabled selected style="padding: 10px">Select Nilai</option>
-                                            @foreach($nilai as $key => $value)
-                                          <option value="{{ $key }}">{{ $value }}
-                                          </option>
-                                          @endforeach
+                                        <select class="form-control pl-0 form-control-line" name="ID_DETAIL_GOLONGAN">
+                                            <option disabled selected style="padding: 10px">Select Golongan</option>
+                                            @foreach($detail as $d)
+                                            <option value="{{ $d->ID_DETAIL_GOLONGAN }}">{{$d->NAMA_GOLONGAN}} {{$d->NILAI}}</option>
+                                            @endforeach
                                             </select>  
                                         </div>
                                       </div>
-                                      <div class="form-group">
-                                        <label class="col-sm-12 mb-0">Nama Golongan</label>
-                                        <div class="col-sm-12">
-                                        <select class="form-control pl-0 form-control-line" name="ID_GOLONGAN">
-                                            <option disabled selected style="padding: 10px">Select Nama Golongan</option>
-                                            @foreach($golongan as $key => $value)
-                                          <option value="{{ $key }}">{{ $value }}
-                                          </option>
-                                          @endforeach
-                                            </select>  
-                                        </div>
-                                      </div>
+                        
                                     <div class="form-group">
                                         <label for="example-nama" class="col-md-12">Nama Gaji Pokok</label>
                                         <div class="col-md-12">
@@ -97,6 +76,16 @@
               </div>
             </div>
 
-
+  @if (session('success'))
+  <script>
+      Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Data Karyawan Berhasil Disimpan',
+          showConfirmButton: false,
+          timer: 2000
+      }); 
+  </script>
+  @endif
 
 @endsection

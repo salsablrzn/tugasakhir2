@@ -62,12 +62,13 @@
                                                 id="NOMINAL_TUNJANGAN" required>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="example-nama" class="col-md-12">Potongan Tunjangan</label>
-                                        <div class="col-md-12">
-                                            <input type="number" placeholder="Please input potongan tunjangan"
-                                                class="form-control pl-0 form-control-line" name="POTONGAN_TUNJANGAN"
-                                                id="POTONGAN_TUNJANGAN" required>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="">Potongan Tunjangan <code>Dalam
+                                                    Persen</code></label><br>
+                                            <input type="number"
+                                            step="any" min="0" class="form-control"
+                                            name="potongan" id="potongan">
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -85,6 +86,16 @@
               </div>
             </div>
 
-
+            @if (session('success'))
+  <script>
+      Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Data Tunjangan Berhasil Disimpan',
+          showConfirmButton: false,
+          timer: 2000
+      }); 
+  </script>
+  @endif
 
 @endsection

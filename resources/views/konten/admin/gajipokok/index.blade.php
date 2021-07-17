@@ -28,8 +28,7 @@
                        <thead>
                                             <tr>
                                                 <th class="border-top-0">ID Gaji Pokok</th>
-                                                <th class="border-top-0">ID_NILAI</th>
-                                                <th class="border-top-0">ID_GOLONGAN</th>
+                                                <th class="border-top-0">GOLONGAN</th>
                                                 <th class="border-top-0">NAMA_GAJI_POKOK</th>
                                                 <th class="border-top-0">MASSA_KERJA</th>
                                                 <th class="border-top-0">NOMINAL_GAJI_POKOK</th>
@@ -41,15 +40,14 @@
                                             
                                             @foreach($GAJI_POKOK as $GAJI)
                                               <tr>
-                                                <td>{{ $GAJI -> ID_GAJI_POKOK}}</td>
-                                                <td>{{ $GAJI -> ID_NILAI }}</td>
-                                                <td>{{ $GAJI -> ID_GOLONGAN}}</td>
-                                                <td>{{ $GAJI -> NAMA_GAJI_POKOK }}</td>
+                                                <td>{{ $GAJI -> ID_GAJU_UTAMA}}</td>
+                                                <td>{{ $GAJI -> NAMA_GOLONGAN }} {{ $GAJI -> NILAI }}</td>
+                                                <td>{{ $GAJI -> NAMA_GAJI_UTAMA }}</td>
                                                 <td>{{ $GAJI -> MASSA_KERJA}}</td>
-                                                <td>{{ $GAJI -> NOMINAL_GAJI_POKOK }}</td>
+                                                <td>{{ $GAJI -> NOMINAL_GAJI_UTAMA }}</td>
                                                 @if (session()->get('TIPE_AKUN') == "ADMIN")                                         
-                                                <td class="glyphicon glyphicon-pencil" style="padding: 5px"><a href="editgajipokok{{ $GAJI -> ID_GAJI_POKOK }}">Edit</td>
-                                                  @endif
+                                                <td class="glyphicon glyphicon-pencil" style="padding: 5px"><a href="editgajipokok{{ $GAJI -> ID_GAJU_UTAMA }}">Edit</td>
+                                                @endif
                                             @endforeach 
 
                                         </tbody>
@@ -62,5 +60,15 @@
               </div>
             </div>
 
-
+  @if (session('success'))
+  <script>
+      Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Data Karyawan Berhasil Disimpan',
+          showConfirmButton: false,
+          timer: 2000
+      }); 
+  </script>
+  @endif
 @endsection

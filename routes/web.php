@@ -144,3 +144,10 @@ Route::get('createdetailnilai', 'adminController@createdetailnilai');
 Route::get('editdetailnilai{id}', 'adminController@editdetailnilai');
 Route::post('storedetailnilai', 'adminController@storedetailnilai');
 Route::post('updatedetailnilai', 'adminController@updatedetailnilai');
+
+Route::get('penggajian', 'adminController@penggajian');
+Route::get('createpenggajian', 'adminController@createpenggajian');
+
+
+Route::post('/data-golongan','admincontroller@getgolongan');
+Route::post('/data-pegawai','admincontroller@gaji');

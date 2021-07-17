@@ -132,8 +132,51 @@ class adminController extends Controller
     }
 
     public function createdatapegawai(){
+
+        
         $jabatan = DB::table('jabatan')->pluck("NAMA_JABATAN","ID_JABATAN");
-        return view('konten/admin/datapegawai/createdatapegawai',compact('jabatan'));
+        $detail = DB::table('detail_golongan')->pluck('NAMA_DETAIL_GOLONGAN','ID_DETAIL_GOLONGAN');
+
+        return view('konten/admin/datapegawai/createdatapegawai',compact('jabatan','detail'));
+    }
+
+    public function penggajian(){
+        return view('konten/admin/penggajian/index_penggajian');
+    }
+
+    public function createpenggajian(){
+
+        // $detail = DB::table('detail_golongan')->pluck('NAMA_DETAIL_GOLONGAN','ID_DETAIL_GOLONGAN');
+        $pegawai = DB::table('pegawai')->pluck('NAMA_PEGAWAI','ID_PEGAWAI');
+        $golpegawai = DB::table('pegawai')
+                        ->join('detail_golongan as dg','dg.ID_DETAIL_GOLONGAN','pegawai.ID_DETAIL_GOLONGAN')
+                        ->get();
+        return view('konten/admin/penggajian/create_penggajian',compact('pegawai','golpegawai'));
+    }
+    public function getgolongan()
+    {   
+        $id_detail = $_POST['id'];
+        $gaji = DB::table('gaji_utama')->where("ID_DETAIL_GOLONGAN",$id_detail)->pluck('NOMINAL_GAJI_UTAMA','ID_GAJU_UTAMA');
+        return  response()->json($gaji);
+    }
+
+
+    public function gaji(){
+        $id_pegawai = $_POST['id'];
+        $data = DB::table('pegawai')
+                    ->join('detail_golongan as dg','pegawai.ID_DETAIL_GOLONGAN','dg.ID_DETAIL_GOLONGAN')
+                    ->join('golongan as g','dg.ID_GOLONGAN','g.ID_GOLONGAN')
+                    ->join('gaji_utama as gu','dg.ID_DETAIL_GOLONGAN','gu.ID_DETAIL_GOLONGAN')
+                    ->join('tujangan as t','dg.ID_GOLONGAN','t.ID_GOLONGAN')
+                    ->where('ID_PEGAWAI','=',$id_pegawai)
+                    ->first();
+
+        $now = Carbon::now();
+        $lamakerja = date_diff(date_create($data->TGL_MASUK_KERJA),date_create($now));
+        $lamakerja=$lamakerja->y;
+
+        return response()->json([$data,$lamakerja]);
+        
     }
 
     public function createdataguru(){
@@ -356,68 +399,75 @@ class adminController extends Controller
     //--- Gaji Pokok ---//
      
     public function gajipokok(){
-        $GAJI_POKOK = DB::table('gaji_pokok')
-                   ->join('nilai','gaji_pokok.ID_NILAI','=','nilai.ID_NILAI')
-                   ->join('golongan','gaji_pokok.ID_GOLONGAN','=','golongan.ID_GOLONGAN')->get();
-        $id = session()->get('ID_GAJI_POKOK');
-        $GAJI_POKOK = gaji_pokok::all();           
+        $GAJI_POKOK = DB::table('gaji_utama')
+                    ->join('detail_golongan as dg','gaji_utama.ID_DETAIL_GOLONGAN','dg.ID_DETAIL_GOLONGAN')
+                    ->join('nilai','dg.ID_NILAI','=','nilai.ID_NILAI')
+                    ->join('golongan','dg.ID_GOLONGAN','=','golongan.ID_GOLONGAN')->get();
+
+        $id = session()->get('ID_GAJU_UTAMA');
+        // $GAJI_POKOK = gaji_pokok::all();           
         return view('konten/admin/gajipokok/index',['GAJI_POKOK'=>$GAJI_POKOK]);
     }
 
     public function creategajipokok(){
-        $nilai = DB::table('nilai')->pluck("NILAI","ID_NILAI");
-        $golongan = DB::table('golongan')->pluck("NAMA_GOLONGAN","ID_GOLONGAN");
-        return view('konten/admin/gajipokok/create',compact('nilai','golongan'));
+
+        $detail = DB::table('detail_golongan')
+                    ->join('golongan as g','detail_golongan.ID_GOLONGAN','g.ID_GOLONGAN')
+                    ->join('nilai as n','detail_golongan.ID_NILAI','n.ID_NILAI')
+                    ->select('detail_golongan.ID_DETAIL_GOLONGAN','n.NILAI','g.NAMA_GOLONGAN')
+                    ->get();
+        // $nilai = DB::table('nilai')->pluck("NILAI","ID_NILAI");
+        // $golongan = DB::table('golongan')->pluck("NAMA_GOLONGAN","ID_GOLONGAN");
+        return view('konten/admin/gajipokok/create')->with(compact('detail'));
     }
    
     public function storegajipokok(Request $request)
     {
-            DB::table('nilai')->get();
-            DB::table('golongan')->get();
-            gaji_pokok::create([
-            'ID_GAJI_POKOK'     => $request->ID_GAJI_POKOK,
-            'ID_NILAI'          => $request->ID_NILAI,
-            'ID_GOLONGAN'       => $request->ID_GOLONGAN,
-            'NAMA_GAJI_POKOK'   => $request->NAMA_GAJI_POKOK,
+            
+            DB::table('gaji_utama')->insert([
+            'ID_DETAIL_GOLONGAN'=>$request->ID_DETAIL_GOLONGAN,
+            'NAMA_GAJI_UTAMA'   => $request->NAMA_GAJI_POKOK,
             'MASSA_KERJA'       => $request->MASSA_KERJA,
-            'NOMINAL_GAJI_POKOK'=> $request->NOMINAL_GAJI_POKOK,      
+            'NOMINAL_GAJI_UTAMA'=> $request->NOMINAL_GAJI_POKOK,      
         ]);
-        return redirect('gajipokok');
+        return redirect('gajipokok')->with('success','success');
         
     }
 
     public function editgajipokok($id)
     {        
-        $nilai=nilai::where('ID_NILAI',$id)->get();
-        $golongan=golongan::where('ID_GOLONGAN',$id)->get();
-        $GAJI_POKOK=gaji_pokok::where('ID_GAJI_POKOK',$id)->get();
+        
+        $detail = DB::table('detail_golongan')
+                    ->join('golongan as g','detail_golongan.ID_GOLONGAN','g.ID_GOLONGAN')
+                    ->join('nilai as n','detail_golongan.ID_NILAI','n.ID_NILAI')
+                    ->select('detail_golongan.ID_DETAIL_GOLONGAN','n.NILAI','g.NAMA_GOLONGAN')
+                    ->get();
+        $GAJI_POKOK=DB::table('gaji_utama')->where('ID_GAJU_UTAMA',$id)->get();
         //
-       return view('konten/admin/gajipokok/edit',['GAJI_POKOK'=>$GAJI_POKOK,'nilai'=>$nilai,'golongan'=>$golongan]);
+       return view('konten/admin/gajipokok/edit',['GAJI_POKOK'=>$GAJI_POKOK,'detail'=>$detail]);
         //
     }
 
     public function updategajipokok(Request $request)
     {
          
-         DB::table('gaji_pokok')->where('ID_GAJI_POKOK',$request->ID_GAJI_POKOK)->update([
-            'ID_GAJI_POKOK'     => $request->ID_GAJI_POKOK,
-            'ID_NILAI'          => $request->ID_NILAI,
-            'ID_GOLONGAN'       => $request->ID_GOLONGAN,
-            'NAMA_GAJI_POKOK'   => $request->NAMA_GAJI_POKOK,
+         DB::table('gaji_utama')->where('ID_GAJU_UTAMA',$request->ID_GAJI_POKOK)->update([
+            'ID_DETAIL_GOLONGAN'    => $request->ID_DETAIL_GOLONGAN,
+            'NAMA_GAJI_UTAMA'   => $request->NAMA_GAJI_POKOK,
             'MASSA_KERJA'       => $request->MASSA_KERJA,
-            'NOMINAL_GAJI_POKOK'=> $request->NOMINAL_GAJI_POKOK,  
+            'NOMINAL_GAJI_UTAMA'=> $request->NOMINAL_GAJI_POKOK  
             ]);  
 
-            return redirect('gajipokok');
+            return redirect('gajipokok')->with('success','success');
     }
 
     //--- Tunjangan ---//
      
     public function tunjangan(){
-        $TUNJANGAN = DB::table('tunjangan')
-                   ->join('golongan','tunjangan.ID_GOLONGAN','=','golongan.ID_GOLONGAN')->get();
+        $TUNJANGAN = DB::table('tujangan')
+                   ->join('golongan','tujangan.ID_GOLONGAN','=','golongan.ID_GOLONGAN')->get();
         $id = session()->get('ID_TUNJANGAN');
-        $TUNJANGAN = tunjangan::all();           
+        $TUNJANGAN = DB::table('tujangan')->get();           
         return view('konten/admin/tunjangan/index',['TUNJANGAN'=>$TUNJANGAN]);
     }
 
@@ -428,15 +478,18 @@ class adminController extends Controller
    
     public function storetunjangan(Request $request)
     {
+            $potongan = $request->potongan;
+            $potongan2 = $potongan/100;
+
             DB::table('golongan')->get();
-            tunjangan::create([
+            DB::table('tujangan')->insert([
             'ID_TUNJANGAN'         => $request->ID_TUNJANGAN,
             'ID_GOLONGAN'          => $request->ID_GOLONGAN,
             'NAMA_TUNJANGAN'       => $request->NAMA_TUNJANGAN,
             'NOMINAL_TUNJANGAN'    => $request->NOMINAL_TUNJANGAN,
-            'POTONGAN_TUNJANGAN'   => $request->POTONGAN_TUNJANGAN,           
+            'POTONGAN_TUNJANGAN'   => $potongan2,           
         ]);
-        return redirect('tunjangan');
+        return redirect('tunjangan')->with('success','success');
         
     }
 
@@ -451,13 +504,16 @@ class adminController extends Controller
 
     public function updatetunjangan(Request $request)
     {
-         
-         DB::table('tunjangan')->where('ID_TUNJANGAN',$request->ID_TUNJANGAN)->update([
+        $potongan = $request->potongan;
+        $potongan2 = $potongan/100;
+       
+
+         DB::table('tujangan')->where('ID_TUNJANGAN',$request->ID_TUNJANGAN)->update([
             'ID_TUNJANGAN'         => $request->ID_TUNJANGAN,
             'ID_GOLONGAN'          => $request->ID_GOLONGAN,
             'NAMA_TUNJANGAN'       => $request->NAMA_TUNJANGAN,
             'NOMINAL_TUNJANGAN'    => $request->NOMINAL_TUNJANGAN,
-            'POTONGAN_TUNJANGAN'   => $request->POTONGAN_TUNJANGAN,     
+            'POTONGAN_TUNJANGAN'   => $potongan2,  
             ]);  
 
             return redirect('tunjangan');

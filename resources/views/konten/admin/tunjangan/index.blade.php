@@ -43,7 +43,14 @@
                                                 <td>{{ $TUNJANG -> ID_GOLONGAN}}</td>
                                                  <td>{{ $TUNJANG -> NAMA_TUNJANGAN}}</td>
                                                 <td>{{ $TUNJANG -> NOMINAL_TUNJANGAN }}</td>
-                                                 <td>{{ $TUNJANG -> POTONGAN_TUNJANGAN}}</td>
+                                                
+                                                <td>
+                                                 @php
+                                                (int)$TUNJANG -> POTONGAN_TUNJANGAN
+                                                @endphp
+                                                </td>
+                                                
+                                                
                                                 @if (session()->get('TIPE_AKUN') == "ADMIN")                                         
                                                 <td class="glyphicon glyphicon-pencil" style="padding: 5px"><a href="edittunjangan{{ $TUNJANG -> ID_TUNJANGAN}}">Edit</td>
                                                   @endif
